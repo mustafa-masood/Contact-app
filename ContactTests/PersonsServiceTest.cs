@@ -21,6 +21,7 @@ namespace ContactTests
         public PersonsServiceTest()
         {
             _personService = new PersonsService();
+            _countriesService = new CountriesService();
         }
 
         #region AddPerson
@@ -123,13 +124,13 @@ namespace ContactTests
                 Email = "laiba@example.com",
                 Address = "address",
                 CountryID = country_response.CountryID,
-                DateOfBirth = DateTime.Parse("2003-08-19"),
+                DateOfBirth = DateTime.Parse("2003-01-01"),
                 Gender = GenderOptions.Female,
                 RecieveNewsLetters = false
             };
             PersonResponse person_response_from_add = _personService.AddPerson(personAddReq);
 
-            PersonResponse? person_response_from_get = _personService.GetPersonByPersonID(person_response_from_add.CountryID);
+            PersonResponse? person_response_from_get = _personService.GetPersonByPersonID(person_response_from_add.PersonID);
               
             //Assert
             Assert.Equal(person_response_from_add, person_response_from_get);
