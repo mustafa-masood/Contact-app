@@ -26,5 +26,12 @@ namespace ServiceContracts
         /// <returns>A list of <see cref="PersonResponse"/> objects representing all persons.  The list will be empty if no
         /// persons are available.</returns>
         List<PersonResponse> GetAllPersons();
+
+        /// <summary>
+        /// Returns the person object based on the given person id
+        /// </summary>
+        /// <param name="personID">Person ID to search</param>
+        /// <returns>Returns matching person object</returns>
+        PersonResponse? GetPersonByPersonID(Guid? personID);
     }
 }
