@@ -8,6 +8,7 @@ using ServiceContracts;
 using ServiceContracts.Enums;
 using ServiceContracts.DTO;
 using Services;
+using Xunit.Abstractions;
 
 namespace ContactTests
 {
@@ -16,12 +17,14 @@ namespace ContactTests
         //private field
         private readonly ICountriesService _countriesService;
         private readonly IPersonsService _personService;
+        private readonly ITestOutputHelper _testOutputHelper;
 
         //constructor
-        public PersonsServiceTest()
+        public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
             _personService = new PersonsService();
             _countriesService = new CountriesService();
+            _testOutputHelper = testOutputHelper;
         }
 
         #region AddPerson
@@ -140,6 +143,7 @@ namespace ContactTests
 
         #endregion
 
+
         #region GetAllPersons
         // the GetAllPersons() should return an empty list by default
 
@@ -217,8 +221,23 @@ namespace ContactTests
                 person_response_list_from_add.Add(person_response);
             }
 
+            //print person_response_list_from_add 
+            _testOutputHelper.WriteLine("Expected : ");
+            foreach(PersonResponse persons in person_response_list_from_add)
+            {
+                _testOutputHelper.WriteLine(persons.ToString());
+            }
+
             //Act
             List<PersonResponse> person_response_list_from_get = _personService.GetAllPersons();
+
+            //print person_response_list_from_get 
+            _testOutputHelper.WriteLine("Actual : ");
+            foreach (PersonResponse persons in person_response_list_from_get)
+            {
+                _testOutputHelper.WriteLine(persons.ToString());
+                //the toString method just shows the classes (e.g. ServiceContracts.DTO.PersonResponse) so we have to override the implementation of toString() method in order to get the actual data
+            }
 
             //Assert
             foreach (PersonResponse person_response_from_add in person_response_list_from_get)
@@ -230,4 +249,4 @@ namespace ContactTests
 
         #endregion
     }
-}
+} 
