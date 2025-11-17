@@ -75,7 +75,42 @@ namespace Services
 
         public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
         {
-            throw new NotImplementedException();
+            List<PersonResponse> allPersons = GetAllPersons();
+            List<PersonResponse> filteredPersons = allPersons;
+
+            if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
+                return filteredPersons;
+
+            switch(searchBy)
+            {
+                case nameof(Person.PersonName):
+                    filteredPersons = allPersons.Where(temp => (!string.IsNullOrEmpty(temp.PersonName) ? temp.PersonName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
+                    break;
+
+                case nameof(Person.Email):
+                    filteredPersons = allPersons.Where(temp => (!string.IsNullOrEmpty(temp.Email) ? temp.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
+                    break;
+
+                case nameof(Person.Gender):
+                    filteredPersons = allPersons.Where(temp => (!string.IsNullOrEmpty(temp.Gender) ? temp.Gender.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
+                    break;
+
+                case nameof(Person.Address):
+                    filteredPersons = allPersons.Where(temp => (!string.IsNullOrEmpty(temp.Address) ? temp.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
+                    break;
+
+                case nameof(Person.CountryID):
+                    filteredPersons = allPersons.Where(temp => (!string.IsNullOrEmpty(temp.Country) ? temp.Country.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
+                    break;
+
+                case nameof(Person.DateOfBirth):
+                    filteredPersons = allPersons.Where(temp => (temp.DateOfBirth != null) ? temp.DateOfBirth.Value.ToString("dd MMMM yyyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
+                    break;
+
+                default: filteredPersons = allPersons; break;
+
+            }
+            return filteredPersons;
         }
     }
 }
