@@ -10,6 +10,7 @@ using ServiceContracts.DTO;
 using Services;
 using Xunit.Abstractions;
 using Entities;
+using System.Linq;
 
 namespace ContactTests
 {
@@ -332,17 +333,120 @@ namespace ContactTests
                 //the toString method just shows the classes (e.g. ServiceContracts.DTO.PersonResponse) so we have to override the implementation of toString() method in order to get the actual data
             }
 
-            //Assert
-            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
-            {
-                Assert.Contains(person_response_from_add, person_response_list_from_search);
-            }
+            person_response_list_from_add = person_response_list_from_add.OrderByDescending(p => p.PersonName).ToList();
 
+
+            //Assert
+            for(int i = 0; i < person_response_list_from_add.Count(); i++)
+            {
+             Assert.Equal(person_response_list_from_add[i], person_response_list_from_search[i]);
+            }
         }
 
         // add few persons, then search based on person name, should return matching persons
         [Fact]
         public void GetFilteredPersons_SearchByPersonName()
+        {
+            //Arrange
+            CountryAddRequest country_req_1 = new CountryAddRequest()
+            {
+                CountryName = "USA"
+            };
+            CountryAddRequest country_req_2 = new CountryAddRequest()
+            {
+                CountryName = "Pakistan"
+            };
+
+            CountryResponse country_resp_1 = _countriesService.AddCountry(country_req_1);
+            CountryResponse country_resp_2 = _countriesService.AddCountry(country_req_2);
+
+            PersonAddRequest person_req_1 = new PersonAddRequest()
+            {
+                PersonName = "Hani",
+                Email = "hani@example.com",
+                Gender = GenderOptions.Male,
+                Address = "Karachi",
+                CountryID = country_resp_1.CountryID,
+                DateOfBirth = DateTime.Parse("2003-01-23"),
+                RecieveNewsLetters = true
+            };
+
+            PersonAddRequest person_req_2 = new PersonAddRequest()
+            {
+                PersonName = "Laiba",
+                Email = "laiba@example.com",
+                Gender = GenderOptions.Female,
+                Address = "Karachi",
+                CountryID = country_resp_2.CountryID,
+                DateOfBirth = DateTime.Parse("2003-08-19"),
+                RecieveNewsLetters = true
+            };
+
+            PersonAddRequest person_req_3 = new PersonAddRequest()
+            {
+                PersonName = "Mustafa",
+                Email = "mustafa@example.com",
+                Gender = GenderOptions.Male,
+                Address = "Karachi",
+                CountryID = country_resp_2.CountryID,
+                DateOfBirth = DateTime.Parse("2003-01-23"),
+                RecieveNewsLetters = false
+            };
+
+            List<PersonAddRequest> person_reqs = new List<PersonAddRequest>()
+            {
+                person_req_1, person_req_2, person_req_3
+            };
+
+            List<PersonResponse> person_response_list_from_add = new List<PersonResponse>();
+
+            foreach (PersonAddRequest personAddRequest in person_reqs)
+            {
+                PersonResponse person_response = _personService.AddPerson(personAddRequest);
+                person_response_list_from_add.Add(person_response);
+            }
+
+            //print person_response_list_from_add 
+            _testOutputHelper.WriteLine("Expected : ");
+            foreach (PersonResponse persons in person_response_list_from_add)
+            {
+                _testOutputHelper.WriteLine(persons.ToString());
+            }
+
+            List<PersonResponse> allPersons = _personService.GetAllPersons();
+
+            //Act
+            List<PersonResponse> person_response_list_from_sort = _personService.GetSortedPersons(allPersons, nameof(Person.PersonName), SortOrderOptions.DESC);
+
+            //print person_response_list_from_get 
+            _testOutputHelper.WriteLine("Actual : ");
+            foreach (PersonResponse persons in person_response_list_from_sort)
+            {
+                _testOutputHelper.WriteLine(persons.ToString());
+                //the toString method just shows the classes (e.g. ServiceContracts.DTO.PersonResponse) so we have to override the implementation of toString() method in order to get the actual data
+            }
+
+            //Assert
+            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
+            {
+                if (person_response_from_add.PersonName != null)
+                {
+                    if (person_response_from_add.PersonName.Contains("i", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Assert.Contains(person_response_from_add, person_response_list_from_sort);
+                    }
+                }
+            }
+
+        }
+
+
+        #endregion
+
+        #region GetSortedPersons
+
+        [Fact]
+        public void GetSortedPersons_SortByPersonName_DESC()
         {
             //Arrange
             CountryAddRequest country_req_1 = new CountryAddRequest()
@@ -432,10 +536,9 @@ namespace ContactTests
                     }
                 }
             }
-
         }
 
-
         #endregion
+
     }
 } 
