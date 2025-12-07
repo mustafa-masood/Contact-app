@@ -323,11 +323,11 @@ namespace ContactTests
             }
 
             //Act
-            List<PersonResponse> person_response_list_from_search = _personService.GetFilteredPersons(nameof(Person.PersonName), "");
+            List<PersonResponse> person_response_list_from_get = _personService.GetFilteredPersons(nameof(Person.PersonName), "");
 
             //print person_response_list_from_get 
             _testOutputHelper.WriteLine("Actual : ");
-            foreach (PersonResponse persons in person_response_list_from_search)
+            foreach (PersonResponse persons in person_response_list_from_get)
             {
                 _testOutputHelper.WriteLine(persons.ToString());
                 //the toString method just shows the classes (e.g. ServiceContracts.DTO.PersonResponse) so we have to override the implementation of toString() method in order to get the actual data
@@ -337,10 +337,11 @@ namespace ContactTests
 
 
             //Assert
-            for(int i = 0; i < person_response_list_from_add.Count(); i++)
+            foreach(PersonResponse person_response_from_Add in person_response_list_from_add)
             {
-             Assert.Equal(person_response_list_from_add[i], person_response_list_from_search[i]);
+                Assert.Contains(person_response_from_Add, person_response_list_from_get);
             }
+
         }
 
         // add few persons, then search based on person name, should return matching persons
