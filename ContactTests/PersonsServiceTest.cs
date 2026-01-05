@@ -584,6 +584,9 @@ namespace ContactTests
             {
                 PersonName = "Leeba",
                 CountryID = country_response.CountryID,
+                Email = "leeba@example.com",
+                Address = "a303c",
+                Gender = GenderOptions.Male
             };
             PersonResponse person_response_from_add = _personService.AddPerson(personAddReq);
 
