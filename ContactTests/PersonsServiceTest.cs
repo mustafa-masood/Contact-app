@@ -638,5 +638,46 @@ namespace ContactTests
 
         #endregion
 
+        #region DeletePerson
+        // When we supply valid personID, it should return true
+        [Fact]
+        public void DeletePerson_ValidPersonID()
+        {
+            //Arrange
+            CountryAddRequest country_req = new CountryAddRequest()
+            {
+                CountryName = "Canada"
+            };
+            CountryResponse country_response_from_add = _countriesService.AddCountry(country_req);
+
+            PersonAddRequest person_add_request = new PersonAddRequest()
+            {
+                PersonName = "Adeel",
+                CountryID = country_response_from_add.CountryID,
+                Email = "adeel@example.com",
+                Address = "address",
+                Gender = GenderOptions.Male,
+                DateOfBirth = Convert.ToDateTime("2002-05-05"),
+                RecieveNewsLetters = true
+            };
+            PersonResponse person_response_from_add = _personService.AddPerson(person_add_request);
+
+            //Act
+            bool delete_result = _personService.DeletePerson(person_response_from_add.PersonID);
+            //Assert
+            Assert.True(delete_result);
+        }
+
+        // When we supply invalid personID, it should return false
+        [Fact]
+        public void DeletePerson_InvalidPersonID()
+        {
+            //Act
+            bool delete_result = _personService.DeletePerson(Guid.NewGuid());
+            //Assert
+            Assert.False(delete_result);
+        }
+
+        #endregion
     }
 } 
