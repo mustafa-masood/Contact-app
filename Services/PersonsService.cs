@@ -82,7 +82,7 @@ namespace Services
             if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
                 return filteredPersons;
 
-            switch(searchBy)
+            switch (searchBy)
             {
                 case nameof(Person.PersonName):
                     filteredPersons = allPersons.Where(temp => (!string.IsNullOrEmpty(temp.PersonName) ? temp.PersonName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
@@ -135,7 +135,7 @@ namespace Services
 
                 (nameof(PersonResponse.Address), SortOrderOptions.ASC) => allPersons.OrderBy(temp => temp.Address, StringComparer.OrdinalIgnoreCase).ToList(),
                 (nameof(PersonResponse.Address), SortOrderOptions.DESC) => allPersons.OrderByDescending(temp => temp.Address, StringComparer.OrdinalIgnoreCase).ToList(),
-                
+
                 (nameof(PersonResponse.DateOfBirth),
                 SortOrderOptions.ASC) => allPersons.OrderBy(temp => temp.DateOfBirth).ToList(),
                 (nameof(PersonResponse.DateOfBirth), SortOrderOptions.DESC) => allPersons.OrderByDescending(temp => temp.DateOfBirth).ToList(),
@@ -184,9 +184,20 @@ namespace Services
 
         }
 
-        public bool DeletePerson(Guid? PersonID)
+        public bool DeletePerson(Guid? personID)
         {
-            throw new NotImplementedException();
+            if (personID == null)
+            {
+                throw new ArgumentNullException(nameof(personID), "PersonID cannot be null.");
+            }
+
+            Person? matchingPerson = _persons.FirstOrDefault(temp => temp.PersonID == personID);
+            if (matchingPerson == null)
+            {
+                return false;
+            }
+            _persons.RemoveAll(temp => temp.PersonID == personID);
+            return true;
         }
     }
 }
