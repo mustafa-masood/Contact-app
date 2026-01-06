@@ -19,12 +19,74 @@ namespace Services
         private readonly ICountriesService _countriesService;
 
         //constructor
-        public PersonsService()
+        public PersonsService(bool init = true)
         {
             _persons = new List<Person>();
             _countriesService = new CountriesService();
-        }
 
+            if (init)
+            {
+
+                _persons.AddRange(new List<Person>()
+                {
+                    new Person()
+                    {
+                        PersonID = Guid.Parse("564347EA-2FB9-4F5C-83E4-7AB37DA68DC2"),
+                        PersonName = "Elga",
+                        Email = "emcgrale0@qq.com",
+                        DateOfBirth = DateTime.Parse("2002-08-27"),
+                        Gender = "Female",
+                        CountryID = Guid.Parse("6CB389A3-4DF1-4C74-8908-3EEC3CA377A9"),
+                        Address = "34 Sachtjen Plaza",
+                        RecieveNewsLetters = true
+                    },
+                    new Person()
+                    {
+                        PersonID = Guid.Parse("7FE30633-0D67-45F8-A9E7-586B320A4B0D"),
+                        PersonName = "Laiba",
+                        Email = "laiba@qq.com",
+                        DateOfBirth = DateTime.Parse("2003-07-20"),
+                        Gender = "Female",
+                        CountryID = Guid.Parse("243BD4D3-B18A-429D-8059-736B0E29DB7B"),
+                        Address = "34 Sachtjen Regency",
+                        RecieveNewsLetters = true
+                    },
+                    new Person()
+                    {
+                        PersonID = Guid.Parse("133C3796-FC37-41F6-B80F-269DDC598A83"),
+                        PersonName = "Umair",
+                        Email = "umair@qq.com",
+                        DateOfBirth = DateTime.Parse("2004-01-27"),
+                        Gender = "Male",
+                        CountryID = Guid.Parse("D1F2FF27-94C5-4C5E-9CF5-6E8CF7599001"),
+                        Address = "34 Luxury Plaza",
+                        RecieveNewsLetters = true
+                    },
+                    new Person()
+                    {
+                        PersonID = Guid.Parse("C6CD9FB4-B738-42C7-A841-DC14EC1D4F5B"),
+                        PersonName = "Hafsah",
+                        Email = "hafsah@qq.com",
+                        DateOfBirth = DateTime.Parse("2004-09-27"),
+                        Gender = "Female",
+                        CountryID = Guid.Parse("4C7010BE-75E0-44E0-8867-BAAA3CCC470C"),
+                        Address = "Zeeshan Luxury",
+                        RecieveNewsLetters = true
+                    },
+                    new Person()
+                    {
+                        PersonID = Guid.Parse("55BDEB9A-1D22-47C2-9409-1DBE1D358600"),
+                        PersonName = "Hani",
+                        Email = "Hani@qq.com",
+                        DateOfBirth = DateTime.Parse("2003-01-23"),
+                        Gender = "Male",
+                        CountryID = Guid.Parse("227B9342-032C-4460-95C8-D3DDB57855FC"),
+                        Address = "69 Sachtjen Glacier",
+                        RecieveNewsLetters = true
+                    },
+                });
+            }
+        }
         private PersonResponse ConvertPersonToPersonResponse(Person person)
         {
             PersonResponse personResponse = person.ToPersonResponse();
