@@ -1,0 +1,11 @@
+﻿<a href="~/Persons/Index?searchBy=@ViewBag.CurrentSearchBy&searchString=@ViewBag.CurrentSearchString&sortBy=@ViewBag.ColumnName&sortOrder=@(ViewBag.CurrentSortOrder == SortOrderOptions.ASC ? SortOrderOptions.DESC : SortOrderOptions.ASC)">
+    @ViewBag.DisplayName
+    @if (ViewBag.CurrentSortBy == @ViewBag.ColumnName)
+    {
+        <i class="fa-solid @(ViewBag.CurrentSortOrder == SortOrderOptions.ASC ? "fa-sort-up": "fa-sort-down")"></i>
+        }
+    else
+    {
+        <i class="fa-solid fa-sort text-muted"></i>
+    }
+</a>
